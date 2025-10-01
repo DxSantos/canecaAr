@@ -42,4 +42,15 @@
     </video>
     
   </body>
+
+  <script>
+  const video = document.getElementById('meu-video');
+  video.addEventListener('loadeddata', () => {
+    console.log("✅ Vídeo carregado");
+  });
+  video.addEventListener('error', (e) => {
+    console.error("❌ Erro ao carregar vídeo", e);
+  });
+</script>
+
 </html>
