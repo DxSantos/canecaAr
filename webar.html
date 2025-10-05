@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover" />
+  <title>WebAR Caneca DL - Vídeo</title>
+
+  <!-- A-Frame -->
+  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+  <!-- AR.js -->
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.3.2/aframe/build/aframe-ar.js"></script>
+
+  <style>
+    html,body{height:100%;margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-serif}
+    .hint {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.5);
+      color: #fff;
+      padding:8px 12px;
+      border-radius:8px;
+      font-size:13px;
+      text-align:center;
+    }
+    /* overlay play para mobile */
+    .overlay-play{
+      position: absolute;
+      left:50%;
+      top:50%;
+      transform: translate(-50%,-50%);
+      background: rgba(0,0,0,0.45);
+      border-radius: 999px;
+      padding:18px;
+      display:block;
+      z-index:10000;
+    }
+    .overlay-play svg{width:36px;height:36px;fill:#fff}
+  </style>
+</head>
+<body>
+
+  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false">
+    <!-- marcador Hiro -->
+    <a-marker preset="hiro" id="marker">
+      <a-entity id="mediaHolder" rotation="-90 0 0"></a-entity>
+    </a-marker>
+    <a-entity camera></a-entity>
+
+    <!-- recurso do vídeo -->
+    <video id="videoResource" src="https://drive.google.com/uc?export=download&id=1mSrvbwIZfc7JjsUrs12qVx_tgdjtuW3s" 
+           playsinline webkit-playsinline muted loop crossorigin="anonymous" style="display:none"></video>
+  </a-scene>
+
+  <div class="hint">
+    Aponte para o marcador <strong>Hiro</strong>. Baixe/imprima: 
+    <a href="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png" target="_blank" style="color:#9cf">hiro.png</a>
+  </div>
+
+  <div id="overlayPlay" class="overlay-play" title="Tocar vídeo">
+    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+  </div>
+
+<script>
+const videoResource = document.getElementById('videoResource');
+const mediaHolder = document.getElementById('mediaHolder');
+const overlayPlay = document.getElementById('overlayPlay');
+
+function mountVideo() {
+  const aVideo = document.createElement('a-video');
+  aVideo.setAttribute('src','#videoResource');
+  aVideo.setAttribute('width','1.6');
+  videoResource.onloadedmetadata = () => {
+    const ratio = videoResource.videoHeight / videoResource.videoWidth;
+    const height = Math.min(1.6 * ratio,1.2);
+    aVideo.setAttribute('height',String(height));
+  };
+  aVideo.setAttribute('position','0 0 0');
+  aVideo.setAttribute('rotation','-90 0 0');
+  mediaHolder.appendChild(aVideo);
+
+  videoResource.play().catch(()=>{
+    overlayPlay.style.display = 'block';
+  });
+}
+
+// overlay play handler para mobile
+overlayPlay.addEventListener('click', ()=>{
+  videoResource.muted = false;
+  videoResource.play().catch(()=>{});
+  overlayPlay.style.display = 'none';
+});
+
+// autoplay inicial
+document.addEventListener('DOMContentLoaded', mountVideo);
+document.addEventListener('touchstart', function onFirstTouch(){
+  if (videoResource.paused) videoResource.play().catch(()=>{});
+  document.removeEventListener('touchstart', onFirstTouch);
+},{passive:true});
+</script>
+
+</body>
+</html>
