@@ -2,29 +2,43 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>WebAR Caneca DL - Vídeo</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover" />
+  <title>WebAR Caneca DL - Vídeo Teste</title>
 
   <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
   <!-- AR.js -->
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.3.2/aframe/build/aframe-ar.js"></script>
 
-  <link rel="stylesheet" href="webar.css">
-  <script>
-    // Feature detect for playsinline
-    document.addEventListener('DOMContentLoaded', function() {
-      var video = document.getElementById('videoResource');
-      var ua = navigator.userAgent;
-      if (/Safari/.test(ua) && !/Chrome/.test(ua)) {
-        video.setAttribute('playsinline', '');
-        video.setAttribute('webkit-playsinline', '');
-      }
-    });
-  </script>
-    <video id="videoResource" src="https://cdn.pixabay.com/vimeo/341999025/sunset-23318.mp4?width=640&hash=5a23e1f7ef90b2ad2b5b3777e5ee0642a3fbb52c
-"
-           muted loop crossorigin="anonymous"></video>
+  <style>
+    html,body{height:100%;margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-serif}
+    .hint {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.5);
+      color: #fff;
+      padding:8px 12px;
+      border-radius:8px;
+      font-size:13px;
+      text-align:center;
+    }
+    .overlay-play{
+      position: absolute;
+      left:50%;
+      top:50%;
+      transform: translate(-50%,-50%);
+      background: rgba(0,0,0,0.45);
+      border-radius: 999px;
+      padding:18px;
+      display:block;
+      z-index:10000;
+    }
+    .overlay-play svg{width:36px;height:36px;fill:#fff}
+  </style>
+</head>
+<body>
 
   <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false">
     <!-- marcador Hiro -->
@@ -33,14 +47,14 @@
     </a-marker>
     <a-entity camera></a-entity>
 
-    <!-- recurso do vídeo -->
-    <videovideo id="videoResource" src="https://drive.google.com/uc?export=download&id=1mSrvbwIZfc7JjsUrs12qVx_tgdjtuW3s" 
-           autoplay webkit-playsinline muted loop crossorigin="anonymous"></video>
+    <!-- vídeo de teste público -->
+    <video id="videoResource" src="https://cdn.pixabay.com/vimeo/341999025/sunset-23318.mp4?width=640&hash=5a23e1f7ef90b2ad2b5b3777e5ee0642a3fbb52c" 
+           playsinline webkit-playsinline muted loop crossorigin="anonymous" style="display:none"></video>
   </a-scene>
 
   <div class="hint">
     Aponte para o marcador <strong>Hiro</strong>. Baixe/imprima: 
-    <aa href="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png" target="_blank" rel="noopener" class="hiro-link">hiro.png</a>
+    <a href="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png" target="_blank" style="color:#9cf">hiro.png</a>
   </div>
 
   <div id="overlayPlay" class="overlay-play" title="Tocar vídeo">
@@ -70,14 +84,12 @@ function mountVideo() {
   });
 }
 
-// overlay play handler para mobile
 overlayPlay.addEventListener('click', ()=>{
   videoResource.muted = false;
   videoResource.play().catch(()=>{});
   overlayPlay.style.display = 'none';
 });
 
-// autoplay inicial
 document.addEventListener('DOMContentLoaded', mountVideo);
 document.addEventListener('touchstart', function onFirstTouch(){
   if (videoResource.paused) videoResource.play().catch(()=>{});
