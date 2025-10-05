@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>WebAR Caneca DL - Vídeo Funcional</title>
+  <title>WebAR Caneca DL - Vídeo Local</title>
 
   <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
@@ -28,11 +28,8 @@
   </a-marker>
   <a-entity camera></a-entity>
 
-  <!-- Vídeo funcional público -->
-  <video id="videoResource"
-         src="https://cdn.pixabay.com/vimeo/341999025/sunset-23318.mp4?width=640&hash=5a23e1f7ef90b2ad2b5b3777e5ee0642a3fbb52c"
-         playsinline webkit-playsinline muted loop crossorigin="anonymous" style="display:none">
-  </video>
+  <!-- Vídeo local -->
+  <video id="videoResource" src="meuvideo.mp4" playsinline webkit-playsinline muted loop style="display:none"></video>
 </a-scene>
 
 <div class="hint">
@@ -49,29 +46,29 @@ const videoResource = document.getElementById('videoResource');
 const mediaHolder = document.getElementById('mediaHolder');
 const overlayPlay = document.getElementById('overlayPlay');
 
-// Monta o vídeo em A-Frame
 function mountVideo() {
-  const aVideo = document.createElement('a-video');
-  aVideo.setAttribute('src', '#videoResource');
-  aVideo.setAttribute('width', '1.6');
-  aVideo.setAttribute('height', '0.9');
-  aVideo.setAttribute('position', '0 0 0');
-  aVideo.setAttribute('rotation', '0 0 0');
-  mediaHolder.appendChild(aVideo);
+  // Cria um plano com o vídeo como textura
+  const aPlane = document.createElement('a-plane');
+  aPlane.setAttribute('width', '1.6');
+  aPlane.setAttribute('height', '0.9');
+  aPlane.setAttribute('position', '0 0 0');
+  aPlane.setAttribute('rotation', '0 0 0');
+  aPlane.setAttribute('material', 'shader: flat; src: #videoResource;');
+  mediaHolder.appendChild(aPlane);
 
+  // Tenta autoplay
   videoResource.play().catch(() => {
     overlayPlay.style.display = 'block';
   });
 }
 
-// Overlay para tocar no mobile
+// Overlay para mobile
 overlayPlay.addEventListener('click', () => {
   videoResource.muted = false;
   videoResource.play().catch(() => {});
   overlayPlay.style.display = 'none';
 });
 
-// Inicializa vídeo ao carregar página
 document.addEventListener('DOMContentLoaded', mountVideo);
 document.addEventListener('touchstart', function onFirstTouch() {
   if (videoResource.paused) videoResource.play().catch(() => {});
