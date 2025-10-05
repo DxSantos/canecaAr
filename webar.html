@@ -14,7 +14,7 @@
 </head>
 <body>
 
-  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false">
+  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: true">
     <!-- marcador Hiro -->
     <a-marker preset="hiro">
   <a-box position="0 0.5 0" material="color:red"></a-box>
@@ -22,11 +22,11 @@
 
     <a-entity camera></a-entity>
 
-    <video id="videoResource"
+    <a-box id="videoResource"
            src="https://cdn.pixabay.com/vimeo/341999025/sunset-23318.mp4?width=640&hash=5a23e1f7ef90b2ad2b5b3777e5ee0642a3fbb52c"
-           autoplay muted loop playsinline webkit-playsinline crossorigin="anonymous" style="display:none">
-    </video>
-  </a-scene>
+           autoplay muted loop playsinline webkit-playsinline crossorigin="anonymous">
+    </>
+  </a-box>
 
   <div class="hint">
     Aponte para o marcador <strong>Hiro</strong>. Baixe/imprima: 
