@@ -1,16 +1,42 @@
-<html>
+<!DOCTYPE html>
+<html lang="pt-BR">
   <head>
+    <meta charset="UTF-8" />
+    <title>WebAR com Zoom</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- A-Frame e AR.js -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.rawgit.com/jeromeetienne/ar.js/2.2.1/aframe/build/aframe-ar.min.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+      a-scene {
+        transform: scale(1.5); /* Simula zoom visual */
+        transform-origin: center center;
+      }
+    </style>
   </head>
-  <body style="margin: 0; overflow: hidden;">
+
+  <body>
     <a-scene embedded arjs>
+      <!-- Marcador Hiro padrão -->
       <a-marker preset="hiro">
-        <!-- <a-video src="video.mp4" autoplay muted width="4" height="2.25" position="0 0 0"></a-video> -->
-        <a-image src="image.png" width="4" height="2.25" position="0 0 0"></a-image>
+        <!-- Imagem ampliada e próxima da câmera -->
+        <a-image 
+          src="image.png" 
+          width="6" 
+          height="3.375" 
+          position="0 0 0.3" 
+          scale="1.8 1.8 1.8"
+        ></a-image>
       </a-marker>
-      <a-entity camera></a-entity>
+
+      <!-- Câmera com campo de visão reduzido para simular zoom -->
+      <a-entity camera fov="30" position="0 0 0"></a-entity>
     </a-scene>
-    del
   </body>
 </html>
