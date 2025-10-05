@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <title>DL Personalizados - AR.js Demo</title>
+
+    <!-- A-Frame -->
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <!-- AR.js (aframe build) -->
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.3.2/aframe/build/aframe-ar.js"></script>
+
+    <style>body{margin:0;overflow:hidden;}</style>
+  </head>
+  <body>
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+      <!-- marcador padrão Hiro -->
+      <a-marker preset="hiro">
+        <!-- plano exibindo imagem -->
+        <a-plane position="0 0 0" rotation="-90 0 0" width="1" height="0.75" 
+                 material="src: #imgTex; transparent:true;">
+        </a-plane>
+      </a-marker>
+
+      <a-entity camera></a-entity>
+
+      <!-- recurso da imagem -->
+      <img id="imgTex" src="https://cdn.pixabay.com/photo/2023/03/16/10/54/mountains-7856204_1280.jpg" style="display:none;">
+    </a-scene>
+  </body>
+</html>
