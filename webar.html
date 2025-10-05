@@ -1,64 +1,14 @@
-<!doctype html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WebAR Flutuante - Vídeo</title>
-
-<!-- A-Frame -->
-<script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-<!-- WebXR AR.js -->
-<script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.3.2/aframe/build/aframe-ar-nft.js"></script>
-
-<style>
-  html, body { margin:0; height:100%; background:#000; }
-  .overlay-play { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-    background: rgba(0,0,0,0.5); padding:18px; border-radius:999px; display:none; z-index:1000;}
-  .overlay-play svg{ width:36px; height:36px; fill:#fff; }
-</style>
-</head>
-<body>
-
-<a-scene embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: true;" vr-mode-ui="enabled: false">
-  <!-- Plano flutuante -->
-  <a-entity id="videoHolder" position="0 1.5 -2" rotation="0 0 0">
-    <a-plane id="videoPlane" width="1.6" height="0.9" material="shader: flat;"></a-plane>
-  </a-entity>
-
-  <a-entity camera></a-entity>
-
-  <!-- Vídeo local -->
-  <video id="videoResource" src="meuvideo.mp4" playsinline webkit-playsinline muted loop style="display:none"></video>
-</a-scene>
-
-<div id="overlayPlay" class="overlay-play">
-<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
-</div>
-
-<script>
-const videoResource = document.getElementById('videoResource');
-const videoPlane = document.getElementById('videoPlane');
-const overlayPlay = document.getElementById('overlayPlay');
-
-// Atribui o vídeo como textura do plano
-videoPlane.setAttribute('material','shader: flat; src: #videoResource;');
-
-function playVideo() {
-  videoResource.play().catch(()=>{ overlayPlay.style.display='block'; });
-}
-
-overlayPlay.addEventListener('click', ()=>{
-  videoResource.muted = false;
-  videoResource.play().catch(()=>{});
-  overlayPlay.style.display='none';
-});
-
-document.addEventListener('DOMContentLoaded', playVideo);
-document.addEventListener('touchstart', function onFirstTouch() {
-  if(videoResource.paused) videoResource.play().catch(()=>{});
-  document.removeEventListener('touchstart', onFirstTouch);
-},{passive:true});
-</script>
-
-</body>
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/jeromeetienne/ar.js/2.2.1/aframe/build/aframe-ar.min.js"></script>
+  </head>
+  <body style="margin: 0; overflow: hidden;">
+    <a-scene embedded arjs>
+      <a-marker preset="hiro">
+        <a-video src="video.mp4" width="4" height="2.25" position="0 0 0"></a-video>
+      </a-marker>
+      <a-entity camera></a-entity>
+    </a-scene>
+  </body>
 </html>
