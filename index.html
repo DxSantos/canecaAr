@@ -1,48 +1,99 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
   <head>
-    <title>DL Personalizados AR</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.1.4/dist/mindar-image.prod.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.1.4/dist/aframe-mindar.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebAR Caneca DL - MindAR</title>
+
+    <!-- A-Frame + MindAR -->
+    <script src="https://cdn.jsdelivr.net/npm/aframe@1.5.0/dist/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
     <style>
       body { margin: 0; overflow: hidden; }
+      #overlayPlay {
+        position: absolute; top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0,0,0,0.5);
+        padding: 20px; border-radius: 100px;
+        display: none; z-index: 10;
+      }
+      #overlayPlay svg { width: 50px; height: 50px; fill: #fff; }
     </style>
   </head>
+
   <body>
     <a-scene
-      mindar-image="imageTargetSrc: logoDL.mind; autoStart: true;"
-      embedded
+      mindar-image="imageTargetSrc: ./target.mind;"
       color-space="sRGB"
+      embedded
+      renderer="colorManagement: true, physicallyCorrectLights"
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: true"
     >
       <a-assets>
-        <img id="thumb" src="thumb.jpg">
+        <video
+          id="videoAR"
+          src="./meuvideo.mp4"
+          preload="auto"
+          playsinline
+          webkit-playsinline
+          muted
+          loop
+          crossorigin="anonymous"
+        ></video>
       </a-assets>
 
-      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+      <a-camera position="0 0 0" look-controls="false"></a-camera>
 
       <a-entity mindar-image-target="targetIndex: 0">
-        <!-- Imagem promocional -->
-        <a-plane src="#thumb" width="1.5" height="1" position="0 0.3 0"></a-plane>
-
-        <!-- Botão interativo -->
-        <a-plane color="#00AAFF" width="0.6" height="0.3" position="0 -0.6 0" class="clickable" id="botao">
-          <a-text value="Assistir" align="center" color="#FFFFFF" position="0 0 0.01" width="2"></a-text>
-        </a-plane>
+        <a-plane
+          src="#videoAR"
+          position="0 0 0"
+          rotation="0 0 0"
+          width="1"
+          height="0.6"
+          material="shader: flat;"
+        ></a-plane>
       </a-entity>
     </a-scene>
 
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const botao = document.querySelector("#botao");
-        botao.addEventListener("click", () => {
-          window.location.href = "https://drive.google.com/uc?export=view&id=1vGvW_MF_WpQgN4KATcUBlBbibkj_JmhU";
+  // Solicitar permissão de câmera e movimento
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(() => console.log("Câmera liberada!"))
+      .catch(err => alert("Ative a permissão da câmera para usar o AR."));
+  } else {
+    alert("Seu navegador não suporta WebAR.");
+  }
+
+  if (typeof DeviceOrientationEvent !== "undefined" &&
+      typeof DeviceOrientationEvent.requestPermission === "function") {
+    DeviceOrientationEvent.requestPermission().catch(console.warn);
+  }
+</script>
+
+
+    <div id="overlayPlay">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </div>
+
+    <script>
+      const video = document.getElementById('videoAR');
+      const overlay = document.getElementById('overlayPlay');
+
+      video.addEventListener('loadeddata', () => {
+        video.play().catch(() => {
+          overlay.style.display = 'block';
         });
+      });
+
+      overlay.addEventListener('click', () => {
+        video.muted = false;
+        video.play();
+        overlay.style.display = 'none';
       });
     </script>
   </body>
 </html>
-
